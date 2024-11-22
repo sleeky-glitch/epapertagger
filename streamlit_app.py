@@ -40,7 +40,7 @@ def process_image_with_gpt4_vision(image, tag):
       base64_image = encode_image_to_base64(image)
 
       response = client.chat.completions.create(
-          model="gpt-4-vision-preview",
+          model="gpt-4-vision-0125",  # Updated model name
           messages=[
               {
                   "role": "system",
@@ -69,7 +69,7 @@ def process_image_with_gpt4_vision(image, tag):
                   ]
               }
           ],
-          max_tokens=4000
+          max_tokens=4096
       )
       return response.choices[0].message.content
   except Exception as e:
@@ -102,6 +102,9 @@ def process_pdf(pdf_file, tag, progress_bar):
           result = process_image_with_gpt4_vision(image, tag)
           if result:
               all_results.append(result)
+
+          # Add a small delay between API calls to avoid rate limits
+          time.sleep(1)
 
       doc.close()
       return "\n".join(all_results)
@@ -174,18 +177,6 @@ def main():
       - Processing may take a few minutes depending on the PDF size
       - The app works with both searchable and scanned PDFs
       """)
-
-  # Footer
-  st.markdown("---")
-  st.markdown(
-      """
-      <div style='text-align: center; color: #666;'>
-      Made with ❤️ by Your Name | 
-      <a href="mailto:your@email.com">Contact Support</a>
-      </div>
-      """, 
-      unsafe_allow_html=True
-  )
 
 if __name__ == "__main__":
   main()
