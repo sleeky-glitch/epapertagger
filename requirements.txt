@@ -3,4 +3,3 @@ PyMuPDF
 pdf2image
 Pillow
 openai
-python-poppler
