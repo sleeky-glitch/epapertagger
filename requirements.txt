@@ -2,3 +2,4 @@ streamlit
 PyMuPDF
 openai
 streamlit-extras
+Pillow
