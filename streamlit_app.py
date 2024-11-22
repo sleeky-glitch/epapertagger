@@ -1,6 +1,6 @@
 import streamlit as st
 import fitz  # PyMuPDF
-import openai
+from openai import OpenAI
 import io
 import base64
 from PIL import Image
@@ -13,14 +13,14 @@ st.set_page_config(
   layout="wide",
 )
 
+# Initialize OpenAI client
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
 # Initialize session state
 if 'processed_text' not in st.session_state:
   st.session_state.processed_text = None
 if 'current_stage' not in st.session_state:
   st.session_state.current_stage = 'upload'
-
-# Set OpenAI API key
-openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 def encode_image_to_base64(image):
   """Convert PIL Image to base64 string"""
@@ -39,7 +39,7 @@ def process_image_with_gpt4_vision(image, tag):
   try:
       base64_image = encode_image_to_base64(image)
 
-      response = openai.ChatCompletion.create(
+      response = client.chat.completions.create(
           model="gpt-4-vision-preview",
           messages=[
               {
@@ -71,7 +71,7 @@ def process_image_with_gpt4_vision(image, tag):
           ],
           max_tokens=4000
       )
-      return response.choices[0].message['content']
+      return response.choices[0].message.content
   except Exception as e:
       st.error(f"Error in GPT-4 Vision processing: {str(e)}")
       return None
@@ -180,8 +180,8 @@ def main():
   st.markdown(
       """
       <div style='text-align: center; color: #666;'>
-      Made with ❤️ by BSPL | 
-      <a href="mailto:nishant.tomar@beyondatagroup.com">Contact Support</a>
+      Made with ❤️ by Your Name | 
+      <a href="mailto:your@email.com">Contact Support</a>
       </div>
       """, 
       unsafe_allow_html=True
