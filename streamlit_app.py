@@ -40,7 +40,7 @@ def process_image_with_gpt4_vision(image, tag):
       base64_image = encode_image_to_base64(image)
 
       response = client.chat.completions.create(
-          model="gpt-4-vision",  # Updated model name
+          model="gpt-4o-mini",  # Updated model name
           messages=[
               {
                   "role": "system",
