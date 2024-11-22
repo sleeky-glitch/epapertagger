@@ -1,13 +1,8 @@
 import streamlit as st
-import pdf2image
-import io
-import os
-from PIL import Image
-import openai
-from poppler import load_from_data
-import tempfile
 import fitz  # PyMuPDF
-import re
+import openai
+import os
+import tempfile
 
 # Set your OpenAI API key
 openai.api_key = st.secrets["OPENAI_API_KEY"]
