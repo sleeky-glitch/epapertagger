@@ -33,14 +33,13 @@ def convert_pdf_page_to_image(page):
   pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))  # 2x zoom for better quality
   img_data = pix.tobytes("jpeg")
   return Image.open(io.BytesIO(img_data))
-
 def process_image_with_gpt4_vision(image, tag):
   """Process image using GPT-4 Vision API"""
   try:
       base64_image = encode_image_to_base64(image)
 
       response = client.chat.completions.create(
-          model="gpt-4o-mini",  # Updated model name
+          model="gpt-4o-mini",  # Using the specified model
           messages=[
               {
                   "role": "system",
@@ -58,13 +57,12 @@ def process_image_with_gpt4_vision(image, tag):
               {
                   "role": "user",
                   "content": [
-                      {
-                          "type": "text",
-                          "text": f"Find news related to '{tag}' in this newspaper image. Extract and translate the relevant text."
-                      },
+                      {"type": "text", "text": f"Find news related to '{tag}' in this newspaper image. Extract and translate the relevant text."},
                       {
                           "type": "image_url",
-                          "image_url": f"data:image/jpeg;base64,{base64_image}"
+                          "image_url": {
+                              "url": f"data:image/jpeg;base64,{base64_image}"
+                          }
                       }
                   ]
               }
