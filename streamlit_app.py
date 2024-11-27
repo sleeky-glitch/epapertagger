@@ -33,6 +33,7 @@ def convert_pdf_page_to_image(page):
   pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))  # 2x zoom for better quality
   img_data = pix.tobytes("jpeg")
   return Image.open(io.BytesIO(img_data))
+
 def process_image_with_gpt4_vision(image, tag):
   """Process image using GPT-4 Vision API"""
   try:
@@ -43,8 +44,8 @@ def process_image_with_gpt4_vision(image, tag):
           messages=[
               {
                   "role": "system",
-                  "content": """You are a Gujarati newspaper expert. Analyze the image, find relevant news related to the given tag, 
-                  and provide the following:
+                  "content": """You are a Gujarati newspaper expert. Analyze the image, find all relevant news related to the given tag, 
+                  and provide the following for each news item:
                   1. The original Gujarati text
                   2. English translation
                   3. Brief summary
@@ -57,7 +58,7 @@ def process_image_with_gpt4_vision(image, tag):
               {
                   "role": "user",
                   "content": [
-                      {"type": "text", "text": f"Find news related to '{tag}' in this newspaper image. Extract and translate the relevant text."},
+                      {"type": "text", "text": f"Find all news related to '{tag}' in this newspaper image. Extract and translate the relevant text."},
                       {
                           "type": "image_url",
                           "image_url": {
@@ -87,7 +88,7 @@ def process_pdf(pdf_file, tag, progress_bar):
       for i, page in enumerate(doc):
           # Update progress
           progress_bar.progress((i + 1) / total_pages, 
-                             f"Processing page {i + 1} of {total_pages}")
+                                 f"Processing page {i + 1} of {total_pages}")
 
           # Convert PDF page to image
           image = convert_pdf_page_to_image(page)
@@ -155,8 +156,10 @@ def main():
 
               for idx, section in enumerate(sections, 1):
                   if section.strip():
-                      with st.expander(f"News Item {idx}", expanded=True):
+                      with st.container():  # Use container for separate boxes
+                          st.markdown(f"#### News Item {idx}")
                           st.markdown(section.strip())
+                          st.markdown("---")  # Add a horizontal line for separation
           else:
               st.error("No relevant news found in the PDF.")
 
