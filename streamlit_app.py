@@ -68,7 +68,7 @@ def process_image_with_gpt4_vision(image, tag):
                     and provide the following for each news item:
                     1. The original Gujarati text
                     2. English translation
-                    3. Brief summary
+                    3. Detailed summary
                     Format as:
                     [Original Gujarati Text]
                     [English Translation]
